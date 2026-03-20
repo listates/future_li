@@ -1,0 +1,39 @@
+# Ontology Schema
+
+types:
+  Person:
+    required: [name]
+  Project:
+    required: [name]
+    status_enum: [planning, active, paused, completed, archived]
+  Task:
+    required: [title, status]
+    status_enum: [open, in_progress, blocked, done, cancelled]
+  Event:
+    required: [title, start]
+  Note:
+    required: [content]
+  Document:
+    required: [title]
+
+relations:
+  has_owner:
+    from_types: [Project, Task]
+    to_types: [Person]
+    cardinality: many_to_one
+  has_task:
+    from_types: [Project]
+    to_types: [Task]
+    cardinality: one_to_many
+  blocks:
+    from_types: [Task]
+    to_types: [Task]
+    acyclic: true
+  member_of:
+    from_types: [Person]
+    to_types: [Project]
+    cardinality: many_to_many
+
+constraints:
+  - type: Event
+    rule: "end >= start if end exists"

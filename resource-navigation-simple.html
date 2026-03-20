@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互联网资源导航 - 简洁版</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #7209b7;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="white" opacity="0.1"/></svg>');
+            pointer-events: none;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto 25px;
+        }
+        
+        .quick-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .stat {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .search-container {
+            max-width: 700px;
+            margin: 40px auto;
+            position: relative;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #searchInput {
+            flex: 1;
+            padding: 18px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        #searchInput:focus {
+            outline: none;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+            transform: translateY(-3px);
+        }
+        
+        .search-btn {
+            padding: 0 30px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .search-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .resources-list {
+            list-style: none;
+        }
+        
+        .resource-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .resource-item:hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-color: #dee2e6;
+            transform: translateX(5px);
+        }
+        
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .resource-favicon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            object-fit: cover;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .resource-info {
+            flex: 1;
+        }
+        
+        .resource-name {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .resource-desc {
+            font-size: 0.9rem;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .resource-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        
+        .tag:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .quick-access {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 40px 0;
+            justify-content: center;
+        }
+        
+        .quick-btn {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-stat {
+            text-align: center;
+        }
+        
+        .footer-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .footer-stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .shortcuts-hint {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            .quick-stats, .footer-stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .category-card {
+                padding: 20px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .category-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: var(--primary-color);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 互联网资源导航</h1>
+            <p class="subtitle">一站式整理互联网上最有价值的资源型网站，按类别清晰排列，助你快速找到所需</p>
+            
+            <div class="quick-stats">
+                <div class="stat">
+                    <i class="fas fa-folder"></i> 12个分类
+                </div>
+                <div class="stat">
+                    <i class="fas fa-link"></i> 80+个资源
+                </div>
+                <div class="stat">
+                    <i class="fas fa-globe"></i> 70+个网站
+                </div>
+            </div>
+        </header>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 搜索资源、网站或标签..." autocomplete="off">
+                <button class="search-btn" id="searchButton">
+                    <i class="fas fa-search"></i> 搜索
+                </button>
+            </div>
+        </div>
+        
+        <div class="quick-access">
+            <button class="quick-btn" data-tag="AI">🤖 AI工具</button>
+            <button class="quick-btn" data-tag="设计">🎨 设计资源</button>
+            <button class="quick-btn" data-tag="学习">📚 学习平台</button>
+            <button class="quick-btn" data-tag="开发">💻 开发工具</button>
+            <button class="quick-btn" data-tag="免费">🆓 免费资源</button>
+            <button class="quick-btn" data-tag="中文">🇨🇳 中文网站</button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在加载资源...</p>
+        </div>
+        
+        <div class="categories-grid" id="categoriesContainer">
+            <!-- 类别将通过JavaScript动态生成 -->
+        </div>
+        
+        <footer>
+            <h3>📊 资源统计</h3>
+            <div class="footer-stats">
+                <div class="footer-stat">
+                    <div class="footer-stat-number" id="categoryCount">0</div>
+                    <div class="footer-stat-label">分类数量</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="footer-stat-number" id="resourceCount">0</div>
+                    <div class="footer-stat-label">资源总数</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="footer-stat-number" id="websiteCount">0</div>
+                    <div class="footer-stat-label">网站数量</div>
+                </div>
+                <div class="footer-stat">
+                    <div class="footer-stat-number" id="tagCount">0</div>
+                    <div class="footer-stat-label">标签数量</div>
+                </div>
+            </div>
+            
+            <p style="margin: 20px 0; color: #6c757d;">
+                最后更新: <span id="updateDate"></span> | 数据持续更新中
+            </p>
+            
+            <div class="shortcuts-hint">
+                <i class="fas fa-lightbulb"></i> 提示: 按 / 键快速搜索 | 点击标签筛选 | Ctrl+F 查找
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 资源数据
+        const resourcesData = {
+            categories: [
+                {
+                    id: 'search',
+                    name: '搜索引擎',
+                    icon: '🔍',
+                    color: '#4CAF50',
+                    resources: [
+                        { name: 'Google', url: 'https://www.google.com', desc: '全球最流行的搜索引擎', tags: ['搜索', '国际', '综合'] },
+                        { name: '百度', url: 'https://www.baidu.com', desc: '中文搜索引擎', tags: ['搜索', '中文', '综合'] },
+                        { name: 'Bing', url: 'https://www.bing.com', desc: '微软搜索引擎', tags: ['搜索', '国际', '微软'] },
+                        { name: 'DuckDuckGo', url: 'https://duckduckgo.com', desc: '注重隐私的搜索引擎', tags: ['搜索', '隐私', '安全'] },
+                        { name: '搜狗搜索', url: 'https://www.sogou.com', desc: '中文智能搜索引擎', tags: ['搜索', '中文', '智能'] }
+                    ]
+                },
+                {
+                    id: 'learning',
+                    name: '学习资源',
+                    icon: '📚',
+                    color: '#2196F3',
+                    resources: [
+                        { name: 'Coursera', url: 'https://www.coursera.org', desc: '国际知名在线课程平台', tags: ['课程', '国际', '大学'] },
+                        { name: 'edX', url: 'https://www.edx.org', desc: '哈佛和MIT创办的在线学习平台', tags: ['课程', '国际', '名校'] },
+                        { name: '中国大学MOOC', url: 'https://www.icourse163.org', desc: '中国大学精品课程', tags: ['课程', '中文', '大学'] },
+                        { name: 'Bilibili 学习区', url: 'https://www.bilibili.com', desc: '丰富的视频学习资源', tags: ['视频', '中文', '免费'] },
+                        { name: 'Khan Academy', url: 'https://www.khanacademy.org', desc: '免费在线教育平台', tags: ['课程', '国际', '免费'] },
+                        { name: '网易公开课', url: 'https://open.163.com', desc: '国内外名校公开课', tags: ['课程', '中文', '名校'] }
+                    ]
+                },
+                {
+                    id: 'design',
+                    name: '设计资源',
+                    icon: '🎨',
+                    color: '#9C27B0',
+                    resources: [
+                        { name: 'Dribbble', url: 'https://dribbble.com', desc: '设计师作品展示平台', tags: ['设计', '灵感', '作品'] },
+                        { name: 'Behance', url: 'https://www.behance.net', desc: 'Adobe旗下的创意作品平台', tags: ['设计', '创意', '作品'] },
+                        { name: '站酷', url: 'https://www.zcool.com.cn', desc: '中国设计师互动平台', tags: ['设计', '中文', '社区'] },
+                        { name: 'UI中国', url: 'https://www.ui.cn', desc: '专业用户体验设计平台', tags: ['UI', 'UX', '中文'] },
+                        { name: 'Unsplash', url: 'https://unsplash.com', desc: '免费高质量图片库', tags: ['图片', '免费', '素材'] },
+                        { name: 'Pexels', url: 'https://www.pexels.com', desc: '免费图库和视频素材', tags: ['图片', '视频', '免费'] }
+                    ]
+                },
+                {
+                    id: 'development',
+                    name: '开发资源',
+                    icon: '💻',
+                    color: '#FF9800',
+                    resources: [
+                        { name: 'GitHub', url: 'https://github.com', desc: '全球最大的代码托管平台', tags: ['代码', '开源', '协作'] },
+                        { name: 'Stack Overflow', url: 'https://stackoverflow.com', desc: '程序员问答社区', tags: ['问答', '编程', '社区'] },
+                        { name: 'MDN Web Docs', url: 'https://developer.mozilla.org', desc: 'Web开发技术文档', tags: ['文档', 'Web', '教程'] },
+                        { name: 'V2EX', url: 'https://www.v2ex.com', desc: '创意工作者社区', tags: ['社区', '技术', '讨论'] },
+                        { name: '掘金', url: 'https://juejin.cn', desc: '开发者技术社区', tags: ['社区', '中文', '技术'] },
+                        { name: '菜鸟教程', url: 'https://www.runoob.com', desc: '编程入门教程网站', tags: ['教程', '入门', '中文'] }
+                    ]
+                },
+                {
+                    id: 'media',
+                    name: '媒体资源',
+                    icon: '🎬',
+                    color: '#F44336',
+                    resources: [
+                        { name: 'YouTube', url: 'https://www.youtube.com', desc: '全球最大的视频分享平台', tags: ['视频', '国际', '娱乐'] },
+                        { name: 'Bilibili', url: 'https://www.bilibili.com', desc: '中国年轻人文化社区', tags: ['视频', '中文', '社区'] },
+                        { name: '抖音', url: 'https://www.douyin.com', desc: '短视频分享平台', tags: ['短视频', '中文', '娱乐'] },
+                        { name: '知乎', url: 'https://www.zhihu.com', desc: '中文问答社区', tags: ['问答', '中文', '知识'] },
+                        { name: '微博', url: 'https://weibo.com', desc: '社交媒体平台', tags: ['社交', '中文', '新闻'] },
+                        { name: '小红书', url: 'https://www.xiaohongshu.com', desc: '生活方式分享平台', tags: ['分享', '中文', '生活'] }
+                    ]
+                },
+                {
+                    id: 'tools',
+                    name: '实用工具',
+                    icon: '🛠️',
+                    color: '#607D8B',
+                    resources: [
+                        { name: 'Canva', url: 'https://www.canva.com', desc: '在线设计工具', tags: ['设计', '在线', '模板'] },
+                        { name: 'ProcessOn', url: 'https://www.processon.com', desc: '在线流程图工具', tags: ['图表', '在线', '协作'] },
+                        { name: '石墨文档', url: 'https://shimo.im', desc: '在线协作文档', tags: ['文档', '协作', '在线'] },
+                        { name: '腾讯文档', url: 'https://docs.qq.com', desc: '在线办公套件', tags: ['文档', '协作', '免费'] },
+                        { name: 'TinyPNG', url: 'https://tinypng.com', desc: '在线图片压缩工具', tags: ['图片', '压缩', '在线'] },
+                        { name: 'Remove.bg', url: 'https://www.remove.bg', desc: '在线去除图片背景', tags: ['图片', '编辑', '在线'] }
+                    ]
+                },
+                {
+                    id: 'ai',
+                    name: 'AI工具',
+                    icon: '🤖',
+                    color: '#00BCD4',
+                    resources: [
+                        { name: 'ChatGPT', url: 'https://chat.openai.com', desc: 'OpenAI对话AI', tags: ['AI', '对话', '智能'] },
+                        { name: 'Claude', url: 'https://claude.ai', desc: 'Anthropic AI助手', tags: ['AI', '对话', '写作'] },
+                        { name: 'Midjourney', url: 'https://www.midjourney.com', desc: 'AI图像生成', tags: ['AI', '图像', '生成'] },
+                        { name: '文心一言', url: 'https://yiyan.baidu.com', desc: '百度AI对话助手', tags: ['AI', '中文', '对话'] },
+                        { name: '通义千问', url: 'https://tongyi.aliyun.com', desc: '阿里云AI助手', tags: ['AI', '中文', '云服务'] },
+                        { name: 'Kimi', url: 'https://kimi.moonshot.cn', desc: '月之暗面AI助手', tags: ['AI', '中文', '长文本'] }
+                    ]
+                },
+                {
+                    id: 'data',
+                    name: '数据资源',
+                    icon: '📊',
+                    color: '#795548',
+                    resources: [
+                        { name: 'Kaggle', url: 'https://www.kaggle.com', desc: '数据科学竞赛平台', tags: ['数据', '竞赛', '机器学习'] },
+                        { name: '天眼查', url: 'https://www.tianyancha.com', desc: '企业信息查询平台', tags: ['企业', '数据', '查询'] },
+                        { name: '国家统计局', url: 'http://www.stats.gov.cn', desc: '官方统计数据', tags: ['官方', '统计', '数据'] },
+                        { name: '世界银行数据', url: 'https://data.worldbank.org', desc: '全球发展数据', tags: ['国际', '经济', '数据'] },
+                        { name: 'GitHub Trending', url: 'https://github.com/trending', desc: 'GitHub热门项目', tags: ['开源', '趋势', '项目'] },
+                        { name: 'Product Hunt', url: 'https://www.producthunt.com', desc: '新产品发现平台', tags: ['产品', '创新', '发现'] }
+                    ]
+                },
+                {
+                    id: 'productivity',
+                    name: '效率工具',
+                    icon: '⚡',
+                    color: '#FF6B6B',
+                    resources: [
+                        { name: 'Notion', url: 'https://www.notion.so', desc: '一体化工作空间', tags: ['笔记', '协作', '管理'] },
+                        { name: '飞书', url: 'https://www.feishu.cn', desc: '企业协作平台', tags: ['协作', '办公', '中文'] },
+                        { name: '滴答清单', url: 'https://www.dida365.com', desc: '任务管理工具', tags: ['待办', '管理', '中文'] },
+                        { name: 'XMind', url: 'https://www.xmind.cn', desc: '思维导图工具', tags: ['思维导图', '创意', '中文'] },
+                        { name: '语雀', url: 'https://www.yuque.com', desc: '知识创作工具', tags: ['知识', '文档', '中文'] },
+                        { name: 'Flomo', url: 'https://flomoapp.com', desc: '碎片化笔记工具', tags: ['笔记', '记录', '中文'] }
+                    ]
+                },
+                {
+                    id: 'finance',
+                    name: '金融财经',
+                    icon: '💰',
+                    color: '#2ECC71',
+                    resources: [
+                        { name: '东方财富', url: 'https://www.eastmoney.com', desc: '财经资讯平台', tags: ['股票', '财经', '中文'] },
+                        { name: '雪球', url: 'https://xueqiu.com', desc: '投资者社区', tags: ['投资', '社区', '中文'] },
+                        { name: '同花顺', url: 'https://www.10jqka.com.cn', desc: '股票交易软件', tags: ['股票', '交易', '中文'] },
+                        { name: 'Investing.com', url: 'https://cn.investing.com', desc: '全球金融市场数据', tags: ['金融', '国际', '数据'] },
+                        { name: 'Bloomberg', url: 'https://www.bloomberg.com', desc: '全球商业资讯', tags: ['商业', '国际', '新闻'] },
+                        { name: '华尔街见闻', url: 'https://wallstreetcn.com', desc: '财经新闻媒体', tags: ['财经', '新闻', '中文'] }
+                    ]
+                },
+                {
+                    id: 'shopping',
+                    name: '购物消费',
+                    icon: '🛒',
+                    color: '#FF9F43',
+                    resources: [
+                        { name: '淘宝', url: 'https://www.taobao.com', desc: 'C2C电商平台', tags: ['购物', '电商', '中文'] },
+                        { name: '京东', url: 'https://www.jd.com', desc: 'B2C电商平台', tags: ['购物', '电商', '中文'] },
+                        { name: '拼多多', url: 'https://www.pinduoduo.com', desc: '社交电商平台', tags: ['购物', '社交', '中文'] },
+                        { name: '亚马逊', url: 'https://www.amazon.com', desc: '国际电商平台', tags: ['购物', '国际', '电商'] },
+                        { name: '什么值得买', url: 'https://www.smzdm.com', desc: '消费决策平台', tags: ['购物', '优惠', '中文'] },
+                        { name: '返利网', url: 'https://www.fanli.com', desc: '购物返利平台', tags: ['购物', '返利', '中文'] }
+                    ]
+                },
+                {
+                    id: 'travel',
+                    name: '旅行出行',
+                    icon: '✈️',
+                    color: '#3498DB',
+                    resources: [
+                        { name: '携程', url: 'https://www.ctrip.com', desc: '在线旅游服务', tags: ['旅行', '酒店', '中文'] },
+                        { name: '飞猪', url: 'https://www.fliggy.com', desc: '阿里旅行平台', tags: ['旅行', '机票', '中文'] },
+                        { name: '去哪儿', url: 'https://www.qunar.com', desc: '旅游搜索引擎', tags: ['旅行', '搜索', '中文'] },
+                        { name: '马蜂窝', url: 'https://www.mafengwo.cn', desc: '旅游攻略社区', tags: ['旅行', '攻略', '中文'] },
+                        { name: 'Booking.com', url: 'https://www.booking.com', desc: '国际酒店预订', tags: ['酒店', '国际', '旅行'] },
+                        { name: 'TripAdvisor', url: 'https://www.tripadvisor.com', desc: '旅游点评网站', tags: ['旅行', '点评', '国际'] }
+                    ]
+                }
+            ]
+        };
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            showLoading();
+            setTimeout(() => {
+                renderCategories();
+                setupEventListeners();
+                updateStats();
+                document.getElementById('updateDate').textContent = new Date().toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                });
+                hideLoading();
+            }, 800);
+        });
+
+        // 显示加载动画
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('categoriesContainer').style.opacity = '0.3';
+        }
+
+        // 隐藏加载动画
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('categoriesContainer').style.opacity = '1';
+        }
+
+        // 渲染所有类别
+        function renderCategories(filteredData = resourcesData) {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+            
+            filteredData.categories.forEach((category, index) => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category-card';
+                categoryElement.style.animationDelay = `${index * 0.1}s`;
+                
+                let resourcesHTML = '';
+                category.resources.forEach(resource => {
+                    resourcesHTML += `
+                        <li class="resource-item">
+                            <a href="${resource.url}" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                <div class="category-icon" style="background: ${category.color}">${category.icon}</div>
+                                <div class="resource-info">
+                                    <div class="resource-name">${resource.name}</div>
+                                    <div class="resource-desc">${resource.desc}</div>
+                                    <div class="resource-tags">
+                                        ${resource.tags.map(tag => `<span class="tag" data-tag="${tag}">${tag}</span>`).join('')}
+                                    </div>
+                                </div>
+                                <i class="fas fa-external-link-alt" style="color: #6c757d;"></i>
+                            </a>
+                        </li>
+                    `;
+                });
+                
+                categoryElement.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-icon" style="background: ${category.color}">${category.icon}</div>
+                        <h2 class="category-title">${category.name}</h2>
+                    </div>
+                    <ul class="resources-list">
+                        ${resourcesHTML}
+                    </ul>
+                `;
+                
+                container.appendChild(categoryElement);
+            });
+            
+            // 添加标签点击事件
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const tagText = this.getAttribute('data-tag');
+                    filterByTag(tagText);
+                });
+            });
+            
+            // 添加资源链接点击事件（复制URL）
+            document.querySelectorAll('.resource-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('tag')) {
+                        e.preventDefault();
+                        const url = this.href;
+                        
+                        // 复制到剪贴板
+                        navigator.clipboard.writeText(url).then(() => {
+                            const originalHTML = this.innerHTML;
+                            this.innerHTML = '<i class="fas fa-check" style="color: #4CAF50;"></i> URL已复制！';
+                            this.style.color = '#4CAF50';
+                            
+                            setTimeout(() => {
+                                this.innerHTML = originalHTML;
+                                this.style.color = '';
+                                window.open(url, '_blank');
+                            }, 1500);
+                        }).catch(() => {
+                            window.open(url, '_blank');
+                        });
+                    }
+                });
+            });
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const quickButtons = document.querySelectorAll('.quick-btn');
+            
+            // 搜索功能
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    performSearch(this.value);
+                }, 300);
+            });
+            
+            searchButton.addEventListener('click', () => performSearch(searchInput.value));
+            
+            // 快速按钮
+            quickButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tag = this.getAttribute('data-tag');
+                    searchInput.value = tag;
+                    performSearch(tag);
+                });
+            });
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                // / 键聚焦搜索框
+                if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+                
+                // Ctrl/Cmd + F 聚焦搜索框
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+                
+                // Escape 清除搜索
+                if (e.key === 'Escape') {
+                    searchInput.value = '';
+                    performSearch('');
+                }
+            });
+        }
+
+        // 执行搜索
+        function performSearch(query) {
+            showLoading();
+            
+            setTimeout(() => {
+                query = query.toLowerCase().trim();
+                
+                if (query === '') {
+                    renderCategories();
+                    updateStats();
+                    hideLoading();
+                    return;
+                }
+                
+                const filteredData = {
+                    categories: resourcesData.categories.map(category => {
+                        const filteredResources = category.resources.filter(resource => {
+                            return resource.name.toLowerCase().includes(query) ||
+                                   resource.desc.toLowerCase().includes(query) ||
+                                   resource.tags.some(tag => tag.toLowerCase().includes(query)) ||
+                                   resource.url.toLowerCase().includes(query);
+                        });
+                        
+                        return filteredResources.length > 0 ? {
+                            ...category,
+                            resources: filteredResources
+                        } : null;
+                    }).filter(Boolean)
+                };
+                
+                renderCategories(filteredData);
+                updateStats(filteredData);
+                hideLoading();
+                
+                // 如果有结果，滚动到第一个
+                if (filteredData.categories.length > 0) {
+                    document.querySelector('.category-card').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 300);
+        }
+
+        // 按标签筛选
+        function filterByTag(tag) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = tag;
+            performSearch(tag);
+        }
+
+        // 更新统计信息
+        function updateStats(data = resourcesData) {
+            let totalResources = 0;
+            let totalWebsites = new Set();
+            let allTags = new Set();
+            
+            data.categories.forEach(category => {
+                totalResources += category.resources.length;
+                category.resources.forEach(resource => {
+                    try {
+                        const url = new URL(resource.url);
+                        totalWebsites.add(url.hostname);
+                    } catch (e) {
+                        totalWebsites.add(resource.url);
+                    }
+                    resource.tags.forEach(tag => allTags.add(tag));
+                });
+            });
+            
+            document.getElementById('categoryCount').textContent = data.categories.length;
+            document.getElementById('resourceCount').textContent = totalResources;
+            document.getElementById('websiteCount').textContent = totalWebsites.size;
+            document.getElementById('tagCount').textContent = allTags.size;
+        }
+
+        // 添加随机推荐功能
+        function getRandomResource() {
+            const allResources = [];
+            resourcesData.categories.forEach(category => {
+                category.resources.forEach(resource => {
+                    allResources.push({
+                        ...resource,
+                        category: category.name,
+                        categoryColor: category.color,
+                        categoryIcon: category.icon
+                    });
+                });
+            });
+            
+            if (allResources.length > 0) {
+                const randomResource = allResources[Math.floor(Math.random() * allResources.length)];
+                
+                // 显示推荐
+                const recommendation = `
+                    <div style="
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: white;
+                        padding: 20px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                        z-index: 1000;
+                        max-width: 300px;
+                        border-left: 5px solid ${randomResource.categoryColor};
+                        animation: slideIn 0.5s ease-out;
+                    ">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <div style="
+                                width: 40px;
+                                height: 40px;
+                                border-radius: 10px;
+                                background: ${randomResource.categoryColor};
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                font-size: 1.2rem;
+                            ">
+                                ${randomResource.categoryIcon}
+                            </div>
+                            <div>
+                                <strong>🎲 随机推荐</strong>
+                                <div style="font-size: 0.9rem; color: #666;">${randomResource.category}</div>
+                            </div>
+                        </div>
+                        <div style="margin: 10px 0;">
+                            <strong>${randomResource.name}</strong>
+                            <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">${randomResource.desc}</div>
+                        </div>
+                        <button onclick="window.open('${randomResource.url}', '_blank'); this.parentElement.remove()" 
+                                style="
+                                    background: ${randomResource.categoryColor};
+                                    color: white;
+                                    border: none;
+                                    padding: 8px 20px;
+                                    border-radius: 20px;
+                                    cursor: pointer;
+                                    width: 100%;
+                                    font-weight: 600;
+                                    transition: all 0.3s ease;
+                                "
+                                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'"
+                                onmouseout="this.style.transform=''; this.style.boxShadow=''">
+                            访问网站
+                        </button>
+                        <button onclick="this.parentElement.remove()" 
+                                style="
+                                    background: transparent;
+                                    border: none;
+                                    color: #666;
+                                    margin-top: 10px;
+                                    cursor: pointer;
+                                    font-size: 0.9rem;
+                                ">
+                            关闭
+                        </button>
+                    </div>
+                `;
+                
+                const existing = document.querySelector('.random-recommendation');
+                if (existing) existing.remove();
+                
+                document.body.insertAdjacentHTML('beforeend', recommendation);
+                
+                // 5秒后自动关闭
+                setTimeout(() => {
+                    const rec = document.querySelector('.random-recommendation');
+                    if (rec) rec.remove();
+                }, 5000);
+            }
+        }
+
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            .random-recommendation {
+                animation: slideIn 0.5s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 添加随机推荐按钮到页面
+        const randomBtn = document.createElement('button');
+        randomBtn.innerHTML = '🎲 随机推荐';
+        randomBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: all 0.3s ease;
+        `;
+        randomBtn.onmouseover = () => {
+            randomBtn.style.transform = 'translateY(-3px)';
+            randomBtn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.3)';
+        };
+        randomBtn.onmouseout = () => {
+            randomBtn.style.transform = '';
+            randomBtn.style.boxShadow = '0 5px 20px rgba(0,0,0,0.2)';
+        };
+        randomBtn.onclick = getRandomResource;
+        document.body.appendChild(randomBtn);
+
+        // 添加分享功能
+        function sharePage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '互联网资源导航',
+                    text: '发现互联网上最有价值的资源网站！',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('链接已复制到剪贴板！');
+                });
+            }
+        }
+
+        // 添加分享按钮
+        const shareBtn = document.createElement('button');
+        shareBtn.innerHTML = '📤 分享';
+        shareBtn.style.cssText = `
+            position: fixed;
+            bottom: 70px;
+            left: 20px;
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: all 0.3s ease;
+        `;
+        shareBtn.onmouseover = () => {
+            shareBtn.style.transform = 'translateY(-3px)';
+            shareBtn.style.boxShadow = '0 8px 25px rgba(0,0,0,0.3)';
+        };
+        shareBtn.onmouseout = () => {
+            shareBtn.style.transform = '';
+            shareBtn.style.boxShadow = '0 5px 20px rgba(0,0,0,0.2)';
+        };
+        shareBtn.onclick = sharePage;
+        document.body.appendChild(shareBtn);
+    </script>
+</body>
+</html>

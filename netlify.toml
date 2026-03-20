@@ -1,0 +1,26 @@
+[build]
+  publish = "."
+  command = "echo 'No build needed for static site'"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/resource-navigation-enhanced.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, s-maxage=86400"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[context.production.environment]
+  NODE_ENV = "production"
+
+# 自定义域名配置
+# [context.production.environment]
+#   CUSTOM_DOMAIN = "resources.yourdomain.com"

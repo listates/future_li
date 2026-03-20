@@ -1,0 +1,38 @@
+# GitHub Pages 配置
+title: 互联网资源导航
+description: 智能一站式互联网资源导航平台
+baseurl: "" # 子目录路径，如果部署在子目录下
+url: "https://your-username.github.io" # 替换为你的GitHub Pages URL
+
+# 构建设置
+markdown: kramdown
+highlighter: rouge
+theme: jekyll-theme-minimal
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# 排除文件
+exclude:
+  - README.md
+  - node_modules/
+  - package.json
+  - package-lock.json
+  - .gitignore
+
+# 包含文件
+include:
+  - _headers
+  - _redirects
+
+# SEO设置
+author:
+  name: 资源导航团队
+  email: contact@example.com
+
+# 社交链接
+social:
+  github: your-username
+  twitter: your-twitter

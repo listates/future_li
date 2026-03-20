@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源导航 - 数据分析仪表板</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        
+        .chart-title {
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+        
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: var(--light-color);
+            font-weight: 600;
+        }
+        
+        .trend-up {
+            color: #10b981;
+        }
+        
+        .trend-down {
+            color: #ef4444;
+        }
+        
+        .refresh-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-line"></i> 资源导航 - 数据分析仪表板</h1>
+            <p>实时监控网站访问数据、用户行为和资源使用情况</p>
+        </header>
+        
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="totalVisitors">0</div>
+                        <div class="stat-label">总访问量</div>
+                    </div>
+                    <i class="fas fa-users stat-icon"></i>
+                </div>
+                <div class="trend-up">↑ 12% 较上周</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="activeUsers">0</div>
+                        <div class="stat-label">当前在线</div>
+                    </div>
+                    <i class="fas fa-user-clock stat-icon"></i>
+                </div>
+                <div class="trend-up">↑ 3 人在线</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="avgSession">0</div>
+                        <div class="stat-label">平均停留(秒)</div>
+                    </div>
+                    <i class="fas fa-stopwatch stat-icon"></i>
+                </div>
+                <div class="trend-up">↑ 8% 较上周</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="bounceRate">0%</div>
+                        <div class="stat-label">跳出率</div>
+                    </div>
+                    <i class="fas fa-sign-out-alt stat-icon"></i>
+                </div>
+                <div class="trend-down">↓ 5% 较上周</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h2 class="chart-title"><i class="fas fa-chart-bar"></i> 每日访问趋势</h2>
+            <canvas id="visitsChart"></canvas>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="chart-container">
+                <h2 class="chart-title"><i class="fas fa-search"></i> 热门搜索词</h2>
+                <canvas id="searchChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h2 class="chart-title"><i class="fas fa-heart"></i> 资源收藏排行</h2>
+                <canvas id="favoritesChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h2 class="chart-title"><i class="fas fa-globe"></i> 用户地域分布</h2>
+            <canvas id="locationChart"></canvas>
+        </div>
+        
+        <div class="data-table">
+            <h2 style="padding: 20px 20px 0;"><i class="fas fa-table"></i> 实时访问记录</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>页面</th>
+                        <th>来源</th>
+                        <th>设备</th>
+                        <th>停留时间</th>
+                    </tr>
+                </thead>
+                <tbody id="visitsTable">
+                    <tr>
+                        <td>01:30</td>
+                        <td>资源导航首页</td>
+                        <td>直接访问</td>
+                        <td>桌面 Chrome</td>
+                        <td>2分45秒</td>
+                    </tr>
+                    <tr>
+                        <td>01:25</td>
+                        <td>设计资源分类</td>
+                        <td>Google搜索</td>
+                        <td>手机 Safari</td>
+                        <td>1分30秒</td>
+                    </tr>
+                    <tr>
+                        <td>01:20</td>
+                        <td>AI工具页面</td>
+                        <td>社交媒体</td>
+                        <td>平板 iPad</td>
+                        <td>3分15秒</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <button class="refresh-btn" onclick="refreshData()">
+            <i class="fas fa-sync-alt"></i> 刷新数据
+        </button>
+    </div>
+    
+    <script>
+        // 模拟数据
+        const mockData = {
+            totalVisitors: 12458,
+            activeUsers: 23,
+            avgSession: 185,
+            bounceRate: '42%',
+            dailyVisits: [65, 78, 92, 85, 103, 120, 98],
+            searchTerms: [
+                { term: '设计工具', count: 45 },
+                { term: 'AI工具', count: 38 },
+                { term: '开发资源', count: 32 },
+                { term: '学习平台', count: 28 },
+                { term: '工作效率', count: 25 }
+            ],
+            topResources: [
+                { name: 'Figma', favorites: 89 },
+                { name: 'GitHub', favorites: 76 },
+                { name: 'ChatGPT', favorites: 65 },
+                { name: 'Notion', favorites: 58 },
+                { name: 'Midjourney', favorites: 52 }
+            ],
+            locations: [
+                { country: '中国', visitors: 45 },
+                { country: '美国', visitors: 28 },
+                { country: '日本', visitors: 12 },
+                { country: '韩国', visitors: 8 },
+                { country: '其他', visitors: 7 }
+            ]
+        };
+        
+        // 初始化统计数字
+        function initStats() {
+            document.getElementById('totalVisitors').textContent = 
+                mockData.totalVisitors.toLocaleString();
+            document.getElementById('activeUsers').textContent = mockData.activeUsers;
+            document.getElementById('avgSession').textContent = mockData.avgSession;
+            document.getElementById('bounceRate').textContent = mockData.bounceRate;
+        }
+        
+        // 创建访问趋势图表
+        function createVisitsChart() {
+            const ctx = document.getElementById('visitsChart').getContext('2d');
+            const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: '访问量',
+                        data: mockData.dailyVisits,
+                        borderColor: '#4361ee',
+                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 创建搜索词图表
+        function createSearchChart() {
+            const ctx = document.getElementById('searchChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: mockData.searchTerms.map(item => item.term),
+                    datasets: [{
+                        label: '搜索次数',
+                        data: mockData.searchTerms.map(item => item.count),
+                        backgroundColor: [
+                            '#4361ee', '#4895ef', '#4cc9f0', '#f72585', '#7209b7'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 创建收藏排行图表
+        function createFavoritesChart() {
+            const ctx = document.getElementById('favoritesChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: mockData.topResources.map(item => item.name),
+                    datasets: [{
+                        data: mockData.topResources.map(item => item.favorites),
+                        backgroundColor: [
+                            '#4361ee', '#4895ef', '#4cc9f0', '#f72585', '#7209b7'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 创建地域分布图表
+        function createLocationChart() {
+            const ctx = document.getElementById('locationChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: mockData.locations.map(item => item.country),
+                    datasets: [{
+                        data: mockData.locations.map(item => item.visitors),
+                        backgroundColor: [
+                            '#4361ee', '#4895ef', '#4cc9f0', '#f72585', '#7209b7'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 刷新数据
+        function refreshData() {
+            // 模拟数据更新
+            mockData.totalVisitors += Math.floor(Math.random() * 10);
+            mockData.activeUsers = Math.floor(Math.random() * 10) + 20;
+            mockData.avgSession = Math.floor(Math.random() * 30) + 170;
+            
+            initStats();
+            
+            // 重新加载页面
+            location.reload();
+        }
+        
+        // 页面加载完成
+        document.addEventListener('DOMContentLoaded', () => {
+            initStats();
+            createVisitsChart();
+            createSearchChart();
+            createFavoritesChart();
+            createLocationChart();
+            
+            // 自动刷新（每5分钟）
+            setInterval(refreshData, 5 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>
