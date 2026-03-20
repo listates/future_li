@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI资源导航 | listates.github.io/future_li</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* 鼠标跟随效果 */
+        .cursor-follower {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+        }
+        
+        .cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        .search-box {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-box button:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* 分类区域 */
+        .categories {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .category-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .category-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 资源展示 */
+        .resources {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+        
+        .resource-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .resource-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .resource-title:hover {
+            color: var(--primary);
+        }
+        
+        .resource-category {
+            background: var(--gray-light);
+            color: var(--gray);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+        
+        .resource-description {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .resource-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tag {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+        
+        .resource-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-light);
+        }
+        
+        .resource-rating {
+            color: #fbbf24;
+        }
+        
+        .resource-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+        }
+        
+        /* 响应式设�?*/
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        
+        /* 加载动画 */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(99, 102, 241, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 鼠标跟随效果 -->
+    <div class="cursor-follower"></div>
+    <div class="cursor-dot"></div>
+    
+    <!-- 头部导航 -->
+    <header>
+        <nav class="navbar">
+            <a href="/" class="logo">
+                <i class="fas fa-robot"></i>
+                <span>AI资源导航</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#categories">分类</a></li>
+                <li><a href="#resources">资源</a></li>
+                <li><a href="#about">关于</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
+            
+            <div class="auth-buttons">
+                <button class="btn btn-outline" onclick="showLoginModal()">登录</button>
+                <button class="btn btn-primary" onclick="showRegisterModal()">注册</button>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- 英雄区域 -->
+    <section class="hero" id="home">
+        <h1 class="animate">探索AI世界的无限可�?/h1>
+        <p class="animate delay-1">汇集全球最前沿的AI工具、模型、框架和资源，为您的AI之旅提供一站式导航服务</p>
+        
+        <div class="search-box animate delay-2">
+            <input type="text" id="searchInput" placeholder="搜索AI工具、模型、框�?..">
+            <button onclick="searchResources()">
+                <i class="fas fa-search"></i> 搜索
+            </button>
+        </div>
+        
+        <div class="animate delay-3">
+            <button class="btn btn-primary" style="margin-right: 1rem;" onclick="scrollToResources()">
+                浏览资源
+            </button>
+            <button class="btn btn-outline" style="color: white; border-color: white;" onclick="showContributeModal()">
+                贡献资源
+            </button>
+        </div>
+    </section>
+    
+    <!-- 分类区域 -->
+    <section class="categories" id="categories">
+        <div class="section-title">
+            <h2>AI资源分类</h2>
+            <p>按类别快速找到您需要的AI资源</p>
+        </div>
+        
+        <div class="category-grid">
+            <div class="category-card animate" onclick="filterByCategory('AI Models')">
+                <div class="category-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI模型</h3>
+                <p>大语言模型、图像模型、语音模型等</p>
+            </div>
+            
+            <div class="category-card animate delay-1" onclick="filterByCategory('AI Tools')">
+                <div class="category-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>AI工具</h3>
+                <p>AI应用、平台、实用工�?/p>
+            </div>
+            
+            <div class="category-card animate delay-2" onclick="filterByCategory('AI Frameworks')">
+                <div class="category-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>AI框架</h3>
+                <p>机器学习、深度学习框�?/p>
+            </div>
+            
+            <div class="category-card animate delay-3" onclick="filterByCategory('AI Platform')">
+                <div class="category-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3>AI平台</h3>
+                <p>AI服务平台、云服务</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 资源展示区域 -->
+    <section class="resources" id="resources">
+        <div class="section-title">
+            <h2>热门AI资源</h2>
+            <p>探索最受欢迎的AI工具和资�?/p>
+        </div>
+        
+        <div class="loader">
+            <div class="spinner"></div>
+            <p style="color: white; margin-top: 1rem;">加载资源�?..</p>
+        </div>
+        
+        <div class="resource-grid" id="resourcesContainer">
+            <!-- 资源卡片将通过JavaScript动态加�?-->
+        </div>
+        
+        <div style="text-align: center; margin-top: 3rem;">
+            <button class="btn btn-primary" onclick="loadResources()">
+                <i class="fas fa-sync-alt"></i> 刷新资源
+            </button>
+        </div>
+    </section>
+    
+    <!-- 关于区域 -->
+    <section class="categories" id="about">
+        <div class="section-title">
+            <h2>关于我们</h2>
+            <p>我们的使命是让AI资源触手可及</p>
+        </div>
+        
+        <div style="max-width: 800px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); padding: 2rem; border-radius: 12px;">
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">AI资源导航平台</h3>
+            <p style="line-height: 1.8; margin-bottom: 1rem;">
+                我们致力于收集、整理和展示全球最优秀的AI资源，包括模型、工具、框架、数据集等�?                通过我们的平台，开发者、研究者和爱好者可以快速找到所需的AI资源，加速AI项目的开发进程�?            </p>
+            <p style="line-height: 1.8;">
+                平台特色�?            </p>
+            <ul style="line-height: 1.8; margin-left: 1.5rem; margin-bottom: 1rem;">
+                <li>实时更新的AI资源数据�?/li>
+                <li>智能搜索和分类筛�?/li>
+                <li>用户评价和推荐系�?/li>
+                <li>社区贡献和资源共�?/li>
+                <li>响应式设计，支持移动�?/li>
+            </ul>
+        </div>
+    </section>
+    
+    <!-- 联系区域 -->
+    <section class="categories" id="contact">
+        <div class="section-title">
+            <h2>联系我们</h2>
+            <p>欢迎反馈和建�?/p>
+        </div>
+        
+        <div style="max-width: 600px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); padding: 2rem; border-radius: 12px;">
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3 style="margin-bottom: 1rem;">反馈与建�?/h3>
+                <p style="margin-bottom: 1.5rem;">
+                    如果您有新的AI资源推荐，或者对平台有任何建议，欢迎联系我们�?                </p>
+                <button class="btn btn-primary" onclick="showContributeModal()">
+                    <i class="fas fa-plus-circle"></i> 提交资源
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AI资源导航</h3>
+                <p>探索AI世界的无限可能，一站式AI资源服务平台�?/p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>快速链�?/h3>
+                <ul class="footer-links">
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#categories">分类</a></li>
+                    <li><a href="#resources">资源</a></li>
+                    <li><a href="#about">关于</a></li>
+                    <li><a href="#contact">联系</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>资源分类</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="filterByCategory('AI Models')">AI模型</a></li>
+                    <li><a href="#" onclick="filterByCategory('AI Tools')">AI工具</a></li>
+                    <li><a href="#" onclick="filterByCategory('AI Frameworks')">AI框架</a></li>
+                    <li><a href="#" onclick="filterByCategory('AI Platform')">AI平台</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>技术支�?/h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showContributeModal()">贡献资源</a></li>
+                    <li><a href="#" onclick="showRegisterModal()">用户注册</a></li>
+                    <li><a href="#" onclick="showLoginModal()">用户登录</a></li>
+                    <li><a href="#">API文档</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2026 AI资源导航平台. 保留所有权�? | 访问: <a href="https://listates.github.io/future_li" style="color: #9ca3af;">listates.github.io/future_li</a></p>
+            <p style="font-size: 0.875rem; margin-top: 0.5rem;">Powered by GitHub Pages & OpenClaw</p>
+        </div>
+    </footer>
+    
+    <!-- JavaScript文件 -->
+    <script src="app.js"></script>
+    
+    <script>
+        // 页面加载完成后的初始�?        window.addEventListener('load', function() {
+            // 隐藏加载动画
+            setTimeout(() => {
+                const loader = document.querySelector('.loader');
+                if (loader) {
+                    loader.style.display = 'none';
+                }
+            }, 1000);
+            
+            // 显示欢迎消息
+            console.log('🎉 AI资源导航网站已准备就绪！');
+            console.log('🚀 功能特性：');
+            console.log('   �?鼠标跟随动画效果');
+            console.log('   �?AI资源动态加�?);
+            console.log('   �?智能搜索和分类筛�?);
+            console.log('   �?响应式设�?);
+            console.log('   �?键盘快捷键支�?);
+        });
+    </script>
+</body>
+</html>
