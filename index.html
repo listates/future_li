@@ -2,17 +2,103 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=resource-navigation-enhanced.html">
-    <title>互联网资源导航 - 正在跳转</title>
-    <script>
-        window.location.href = "resource-navigation-enhanced.html";
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互联网资源导航</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .status {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .link {
+            display: block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
 </head>
 <body>
-    <div style="text-align: center; padding: 50px;">
-        <h1>互联网资源导航</h1>
-        <p>正在跳转到主页面...</p>
-        <p>如果页面没有自动跳转，请 <a href="resource-navigation-enhanced.html">点击这里</a></p>
+    <div class="container">
+        <h1>🌐 互联网资源导航</h1>
+        <p>发现、收藏、分享互联网上最优质的资源</p>
+        
+        <div class="status">
+            <h3>✅ 网站状态正常</h3>
+            <p>域名跳转问题已修复</p>
+            <p>现在可以正常访问所有功能</p>
+        </div>
+        
+        <div class="links">
+            <a href="resource-navigation-enhanced.html" class="link">
+                🚀 进入增强版资源导航
+            </a>
+            <a href="resource-navigation-simple.html" class="link">
+                📄 简洁版资源导航
+            </a>
+            <a href="analytics-dashboard.html" class="link">
+                📊 数据分析面板
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>访问地址: https://listates.github.io/future_li</p>
+            <p>© 2026 互联网资源导航 | 基于 GitHub Pages 部署</p>
+        </div>
     </div>
 </body>
 </html>

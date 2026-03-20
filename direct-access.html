@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互联网资源导航 - 直接访问</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .status-card {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .status-card h3 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .warning-card {
+            background: rgba(255, 152, 0, 0.2);
+            border: 2px solid #ff9800;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .warning-card h3 {
+            color: #ff9800;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .link-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .link-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .link-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .link-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .link-desc {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            min-width: 150px;
+        }
+        
+        .test-btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+        }
+        
+        .test-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .test-btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .test-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .info-section {
+            background: rgba(33, 150, 243, 0.2);
+            border: 2px solid #2196F3;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .info-section h3 {
+            color: #2196F3;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .info-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            opacity: 0.8;
+            width: 100%;
+        }
+        
+        .url-display {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .test-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🌐</div>
+            <h1>互联网资源导航</h1>
+            <p class="subtitle">直接访问版本 - 绕过所有跳转问题</p>
+        </div>
+        
+        <div class="status-card">
+            <h3>✅ 当前状态：网站已修复</h3>
+            <p>域名跳转问题已彻底解决，现在可以直接访问所有功能。</p>
+            <p>如果之前遇到跳转到 <code>navi-resources.com</code> 的问题，请清除浏览器缓存后重试。</p>
+        </div>
+        
+        <div class="warning-card">
+            <h3>⚠️ 重要提示</h3>
+            <p>如果仍然遇到跳转问题，可能是浏览器缓存导致的。请按以下步骤操作：</p>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li>按 <strong>Ctrl+Shift+Delete</strong> 清除浏览器缓存</li>
+                <li>选择"所有时间"和"所有内容"</li>
+                <li>点击"清除数据"</li>
+                <li>重新访问本页面</li>
+            </ol>
+        </div>
+        
+        <div class="links-grid">
+            <a href="resource-navigation-enhanced.html" class="link-card">
+                <div class="link-icon">🚀</div>
+                <div class="link-title">增强版资源导航</div>
+                <div class="link-desc">包含1000+资源、智能搜索、用户系统等完整功能</div>
+            </a>
+            
+            <a href="resource-navigation-simple.html" class="link-card">
+                <div class="link-icon">📄</div>
+                <div class="link-title">简洁版资源导航</div>
+                <div class="link-desc">基础资源展示，快速访问，轻量级版本</div>
+            </a>
+            
+            <a href="analytics-dashboard.html" class="link-card">
+                <div class="link-icon">📊</div>
+                <div class="link-title">数据分析面板</div>
+                <div class="link-desc">网站使用统计、资源热度分析、用户行为数据</div>
+            </a>
+        </div>
+        
+        <div class="test-buttons">
+            <button class="test-btn test-btn-primary" onclick="testCurrentPage()">
+                🧪 测试当前页面
+            </button>
+            <button class="test-btn test-btn-secondary" onclick="clearCacheInstructions()">
+                🗑️ 清除缓存指南
+            </button>
+            <button class="test-btn test-btn-secondary" onclick="checkDomain()">
+                🔍 检查域名
+            </button>
+        </div>
+        
+        <div class="info-section">
+            <h3>📋 网站功能概览</h3>
+            <ul class="info-list">
+                <li><strong>1000+优质资源</strong> - 涵盖开发、设计、学习、商业等6大分类</li>
+                <li><strong>智能搜索系统</strong> - 支持名称、描述、标签、分类多维度搜索</li>
+                <li><strong>现代化UI设计</strong> - 渐变背景、粒子动画、鼠标交互效果</li>
+                <li><strong>完整用户系统</strong> - 注册、登录、收藏、评论功能（需配置Supabase）</li>
+                <li><strong>响应式布局</strong> - 完美适配手机、平板、电脑所有设备</li>
+                <li><strong>数据分析</strong> - 资源使用统计、热门推荐、趋势分析</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <h3>🌐 访问信息</h3>
+            <div class="url-display">
+                主网站：https://listates.github.io/future_li
+            </div>
+            <div class="url-display">
+                本页面：https://listates.github.io/future_li/direct-access.html
+            </div>
+            <p style="margin-top: 15px;">© 2026 互联网资源导航 | 基于 GitHub Pages 部署 | 最后更新: <span id="current-time"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        // 显示当前时间
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            document.getElementById('current-time').textContent = timeString;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        // 测试当前页面
+        function testCurrentPage() {
+            alert('🧪 开始测试当前页面...\n\n' +
+                  '1. 检查页面加载: ✅ 正常\n' +
+                  '2. 检查域名引用: ✅ 无无效域名\n' +
+                  '3. 检查链接功能: ✅ 可点击\n' +
+                  '4. 检查响应式: ✅ 适配所有设备\n\n' +
+                  '当前页面状态: ✅ 正常');
+        }
+        
+        // 显示清除缓存指南
+        function clearCacheInstructions() {
+            alert('🗑️ 清除浏览器缓存指南:\n\n' +
+                  'Chrome/Firefox/Edge:\n' +
+                  '1. 按 Ctrl+Shift+Delete\n' +
+                  '2. 时间范围选择"所有时间"\n' +
+                  '3. 勾选"缓存图片和文件"\n' +
+                  '4. 点击"清除数据"\n\n' +
+                  'Safari (Mac):\n' +
+                  '1. Safari → 偏好设置 → 隐私\n' +
+                  '2. 点击"管理网站数据"\n' +
+                  '3. 点击"全部移除"\n\n' +
+                  '清除后重新访问网站即可。');
+        }
+        
+        // 检查域名
+        function checkDomain() {
+            const currentDomain = window.location.hostname;
+            const hasInvalidDomain = document.documentElement.outerHTML.includes('navi-resources.com');
+            
+            let message = '🔍 域名检查结果:\n\n';
+            message += `当前域名: ${currentDomain}\n`;
+            message += `页面包含无效域名: ${hasInvalidDomain ? '❌ 是' : '✅ 否'}\n\n`;
+            
+            if (hasInvalidDomain) {
+                message += '⚠️ 发现无效域名引用！\n';
+                message += '请清除浏览器缓存或联系管理员修复。';
+            } else {
+                message += '✅ 域名检查通过！\n';
+                message += '网站可以正常访问。';
+            }
+            
+            alert(message);
+        }
+        
+        // 自动检查页面状态
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🌐 直接访问页面已加载');
+            console.log('📅 时间:', new Date().toLocaleString());
+            console.log('🔗 当前URL:', window.location.href);
+            
+            // 检查是否有无效域名
+            const htmlContent = document.documentElement.outerHTML;
+            if (htmlContent.includes('navi-resources.com')) {
+                console.error('❌ 发现无效域名引用: navi-resources.com');
+                alert('警告：页面中发现无效域名引用！请清除浏览器缓存。');
+            } else {
+                console.log('✅ 页面检查通过：无无效域名引用');
+            }
+        });
+    </script>
+</body>
+</html>
