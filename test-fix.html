@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>域名修复测试</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .status {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 2px solid #F44336;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 域名修复测试</h1>
+        <p>测试网站是否已完全修复</p>
+        
+        <div id="test-results">
+            <p>正在测试...</p>
+        </div>
+        
+        <div class="status" id="result-status" style="display: none;">
+            <h3 id="result-title"></h3>
+            <p id="result-message"></p>
+        </div>
+    </div>
+    
+    <script>
+        async function testWebsite() {
+            const resultsDiv = document.getElementById('test-results');
+            const statusDiv = document.getElementById('result-status');
+            const title = document.getElementById('result-title');
+            const message = document.getElementById('result-message');
+            
+            const tests = [
+                { name: '主网站', url: 'https://listates.github.io/future_li' },
+                { name: '增强版', url: 'https://listates.github.io/future_li/resource-navigation-enhanced.html' },
+                { name: '简洁版', url: 'https://listates.github.io/future_li/resource-navigation-simple.html' }
+            ];
+            
+            let allPassed = true;
+            let results = [];
+            
+            for (const test of tests) {
+                try {
+                    const response = await fetch(test.url, { method: 'HEAD' });
+                    if (response.ok) {
+                        results.push(`✅ ${test.name}: 正常 (${response.status})`);
+                    } else {
+                        results.push(`❌ ${test.name}: 失败 (${response.status})`);
+                        allPassed = false;
+                    }
+                } catch (error) {
+                    results.push(`❌ ${test.name}: 错误 (${error.message})`);
+                    allPassed = false;
+                }
+            }
+            
+            // 检查是否有域名引用
+            try {
+                const response = await fetch('https://listates.github.io/future_li/resource-navigation-enhanced.html');
+                const html = await response.text();
+                if (html.includes('navi-resources.com')) {
+                    results.push('❌ 检测到未修复的域名引用');
+                    allPassed = false;
+                } else {
+                    results.push('✅ 无域名引用问题');
+                }
+            } catch (error) {
+                results.push(`⚠️ 域名检查失败: ${error.message}`);
+            }
+            
+            resultsDiv.innerHTML = results.join('<br>');
+            statusDiv.style.display = 'block';
+            
+            if (allPassed) {
+                title.textContent = '✅ 所有测试通过！';
+                message.textContent = '网站已完全修复，可以正常访问。';
+                statusDiv.className = 'status';
+            } else {
+                title.textContent = '❌ 部分测试失败';
+                message.textContent = '请检查修复脚本或手动修复剩余问题。';
+                statusDiv.className = 'error';
+            }
+        }
+        
+        // 运行测试
+        testWebsite();
+    </script>
+</body>
+</html>
